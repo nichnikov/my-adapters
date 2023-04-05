@@ -13,7 +13,8 @@ model.load_adapter(adapter_path)
 model.set_active_adapters("rotten_tomatoes")
 
 classifier = TextClassificationPipeline(model=model, tokenizer=tokenizer) #, device=training_args.device.index)
-texts = ["complete rubbish", "This is awesome!",
+texts = ["complete rubbish",
+         "This is awesome!",
          "in general, a good film, but the actors lack screenwriting skills and the director's "
          "imagination so-so"]
 

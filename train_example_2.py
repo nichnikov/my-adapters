@@ -1,7 +1,9 @@
 import os
 import numpy as np
+import transformers
 from datasets import load_dataset
-from transformers import (RobertaTokenizer,
+from transformers import (AutoTokenizer,
+                          AutoModel,
                           RobertaConfig,
                           RobertaModelWithHeads,
                           TextClassificationPipeline,
@@ -20,10 +22,10 @@ def compute_accuracy(p: EvalPrediction):
     return {"acc": (preds == p.label_ids).mean()}
 
 
-tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-config = RobertaConfig.from_pretrained('roberta-base', num_labels=2, )
-model = RobertaModelWithHeads.from_pretrained('roberta-base', config=config, )
-
+tokenizer = AutoTokenizer.from_pretrained('sentence-transformers/paraphrase-multilingual-mpnet-base-v2')
+config = AutoModel.from_pretrained('sentence-transformers/paraphrase-multilingual-mpnet-base-v2', num_labels=2, )
+model = transformers.AutoModelWithHeads.from_pretrained('sentence-transformers/paraphrase-multilingual-mpnet-base-v2',
+                                                        config=config, )
 
 dataset = load_dataset("rotten_tomatoes")
 print("num rows:", dataset.num_rows)
@@ -75,5 +77,5 @@ trainer.train()
 classifier = TextClassificationPipeline(model=model, tokenizer=tokenizer, device=training_args.device.index)
 predict = classifier("This is awesome!")
 print(predict)
-adapter_path = os.path.join(os.getcwd(), "models", "rotten-tomatoes")
+adapter_path = os.path.join(os.getcwd(), "models", "rotten-tomatoes2")
 model.save_adapter(adapter_path, "rotten_tomatoes")
